@@ -74,13 +74,22 @@ function ProductPage() {
         <div className="grid lg:grid-cols-2 gap-8">
           <div className="glass rounded-2xl overflow-hidden">
             <div className="aspect-square bg-surface/50 relative">
-              {product.cover_image ? (
+              {(product as any).stock_kind === "card" ? (
+                <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-neon-violet/30 via-neon-cyan/15 to-background p-6 text-center">
+                  <div>
+                    <div className="font-mono text-xs text-neon-violet uppercase tracking-widest mb-3">CARD ON FILE</div>
+                    <div className="font-mono text-2xl font-bold tracking-widest">XXXX XXXX XXXX XXXX</div>
+                    <div className="font-mono text-xs text-muted-foreground mt-3">CVV ••• &nbsp;&nbsp; EXP ••/••</div>
+                    <p className="text-[10px] text-muted-foreground mt-4 max-w-xs mx-auto">Real card number, CVV and expiry are revealed only after admin verifies your payment.</p>
+                  </div>
+                </div>
+              ) : product.cover_image ? (
                 <img src={product.cover_image} alt={product.title} className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full grid place-items-center text-muted-foreground/30 font-mono text-xs">NO PREVIEW</div>
               )}
             </div>
-            {product.gallery_images?.length > 0 && (
+            {(product as any).stock_kind !== "card" && product.gallery_images?.length > 0 && (
               <div className="grid grid-cols-4 gap-2 p-2">
                 {product.gallery_images.slice(0, 4).map((g: string, i: number) => (
                   <img key={i} src={g} className="w-full aspect-square object-cover rounded" alt="" />
