@@ -141,24 +141,29 @@ function Landing() {
             </div>
           </motion.div>
 
-          {/* Stats strip */}
-          <div className="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Stats strip - live metrics */}
+          <div className="mt-16 grid grid-cols-2 lg:grid-cols-6 gap-4">
             {[
-              { label: "Registered Users", value: stats?.users ?? 0, color: "neon-cyan" },
-              { label: "Active Listings", value: stats?.products ?? 0, color: "neon-blue" },
-              { label: "Orders Completed", value: stats?.orders ?? 0, color: "neon-violet" },
-              { label: "Uptime", value: 99, suffix: ".9%", color: "neon-pink" },
-            ].map((s, i) => (
+              { label: "Live now", value: stats?.live ?? 0, color: "neon-cyan", pulse: true },
+              { label: "Visits / 24h", value: stats?.visits24 ?? 0, color: "neon-blue" },
+              { label: "Joined today", value: stats?.joinedToday ?? 0, color: "neon-pink" },
+              { label: "Total users", value: stats?.users ?? 0, color: "neon-cyan" },
+              { label: "Active listings", value: stats?.products ?? 0, color: "neon-violet" },
+              { label: "Orders done", value: stats?.orders ?? 0, color: "neon-pink" },
+            ].map((s: any, i: number) => (
               <motion.div
                 key={s.label}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + i * 0.07 }}
-                className="glass rounded-2xl p-5 relative overflow-hidden"
+                transition={{ delay: 0.2 + i * 0.05 }}
+                className="glass rounded-2xl p-4 relative overflow-hidden"
               >
-                <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">{s.label}</p>
-                <p className={`mt-2 font-display text-3xl font-bold text-${s.color}`} style={{ textShadow: `0 0 16px var(--${s.color})` }}>
-                  <CountUp to={s.value} suffix={s.suffix} />
+                <div className="flex items-center gap-1.5">
+                  {s.pulse && <span className="size-1.5 rounded-full bg-neon-cyan animate-pulse" />}
+                  <p className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">{s.label}</p>
+                </div>
+                <p className={`mt-1 font-display text-2xl font-bold text-${s.color}`} style={{ textShadow: `0 0 16px var(--${s.color})` }}>
+                  <CountUp to={s.value} />
                 </p>
               </motion.div>
             ))}
