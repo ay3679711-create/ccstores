@@ -17,7 +17,7 @@ export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
   beforeLoad: async () => {
     const { data } = await supabase.auth.getSession();
-    if (data.session) throw redirect({ to: "/dashboard" });
+    if (data.session) throw redirect({ to: "/marketplace" });
   },
   head: () => ({
     meta: [
@@ -27,6 +27,10 @@ export const Route = createFileRoute("/auth")({
   }),
   component: AuthPage,
 });
+
+function markWelcomePending() {
+  try { sessionStorage.setItem("ccwhale_welcome_pending", "1"); } catch {}
+}
 
 function AuthPage() {
   const search = Route.useSearch();
@@ -48,18 +52,20 @@ function AuthPage() {
           email: form.email,
           password: form.password,
           options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`,
+            emailRedirectTo: `${window.location.origin}/marketplace`,
             data: { full_name: form.fullName, phone: form.phone },
           },
         });
         if (error) throw error;
+        markWelcomePending();
         toast.success("Account created — welcome to the grid");
-        navigate({ to: "/dashboard" });
+        navigate({ to: "/marketplace" });
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email: form.email, password: form.password });
         if (error) throw error;
-        toast.success("Authenticated");
-        navigate({ to: "/dashboard" });
+        markWelcomePending();
+        toast.success("Ready. Welcome back, operator.");
+        navigate({ to: "/marketplace" });
       }
     } catch (err: any) {
       toast.error(err.message ?? "Authentication failed");
@@ -71,10 +77,11 @@ function AuthPage() {
   const handleGoogle = async () => {
     setLoading(true);
     try {
-      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin + "/dashboard" });
+      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin + "/marketplace" });
       if (result.error) { toast.error(result.error.message ?? "Google sign-in failed"); return; }
-      if (result.redirected) return;
-      navigate({ to: "/dashboard" });
+      if (result.redirected) { markWelcomePending(); return; }
+      markWelcomePending();
+      navigate({ to: "/marketplace" });
     } finally { setLoading(false); }
   };
 
