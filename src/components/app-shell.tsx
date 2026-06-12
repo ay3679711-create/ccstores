@@ -1,14 +1,14 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
-import { Home, ShoppingBag, Package, Users, User as UserIcon, Shield, LogOut, Bell } from "lucide-react";
+import { ShoppingBag, Package, Users, User as UserIcon, Shield, LogOut, Bell } from "lucide-react";
 import { useAuth, useProfile, useIsAdmin } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { WelcomePopup } from "@/components/welcome-popup";
 import type { ReactNode } from "react";
 
 const navItems = [
-  { to: "/", label: "Home", icon: Home },
   { to: "/marketplace", label: "Market", icon: ShoppingBag },
   { to: "/orders", label: "Orders", icon: Package, auth: true },
   { to: "/community", label: "Community", icon: Users, auth: true },
@@ -106,10 +106,12 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <main className="flex-1 pb-20 md:pb-0">{children}</main>
 
+      {user && <WelcomePopup />}
+
       {/* Mobile bottom nav */}
       {user && (
         <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 glass-strong border-t border-border/40">
-          <div className="grid grid-cols-5 h-16">
+          <div className="grid grid-cols-4 h-16">
             {navItems.map((item) => {
               const active = pathname === item.to || (item.to !== "/" && pathname.startsWith(item.to));
               const Icon = item.icon;

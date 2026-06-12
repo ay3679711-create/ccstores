@@ -38,6 +38,39 @@ export type Database = {
         }
         Relationships: []
       }
+      app_settings: {
+        Row: {
+          brand_logo_url: string | null
+          brand_name: string
+          delivery_message_template: string
+          id: number
+          payment_timer_hours: number
+          updated_at: string
+          welcome_popup_body: string
+          welcome_popup_title: string
+        }
+        Insert: {
+          brand_logo_url?: string | null
+          brand_name?: string
+          delivery_message_template?: string
+          id?: number
+          payment_timer_hours?: number
+          updated_at?: string
+          welcome_popup_body?: string
+          welcome_popup_title?: string
+        }
+        Update: {
+          brand_logo_url?: string | null
+          brand_name?: string
+          delivery_message_template?: string
+          id?: number
+          payment_timer_hours?: number
+          updated_at?: string
+          welcome_popup_body?: string
+          welcome_popup_title?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -303,6 +336,8 @@ export type Database = {
           id: string
           notes: string | null
           order_number: string
+          payment_deadline: string | null
+          payment_submitted_at: string | null
           status: Database["public"]["Enums"]["order_status"]
           subtotal: number
           total: number
@@ -318,6 +353,8 @@ export type Database = {
           id?: string
           notes?: string | null
           order_number?: string
+          payment_deadline?: string | null
+          payment_submitted_at?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           subtotal?: number
           total?: number
@@ -333,6 +370,8 @@ export type Database = {
           id?: string
           notes?: string | null
           order_number?: string
+          payment_deadline?: string | null
+          payment_submitted_at?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           subtotal?: number
           total?: number
@@ -430,6 +469,50 @@ export type Database = {
           },
         ]
       }
+      product_secrets: {
+        Row: {
+          account_balance: number | null
+          account_login: string | null
+          account_password: string | null
+          card_cvv: string | null
+          card_exp: string | null
+          card_number: string | null
+          extra_notes: string | null
+          product_id: string
+          updated_at: string
+        }
+        Insert: {
+          account_balance?: number | null
+          account_login?: string | null
+          account_password?: string | null
+          card_cvv?: string | null
+          card_exp?: string | null
+          card_number?: string | null
+          extra_notes?: string | null
+          product_id: string
+          updated_at?: string
+        }
+        Update: {
+          account_balance?: number | null
+          account_login?: string | null
+          account_password?: string | null
+          card_cvv?: string | null
+          card_exp?: string | null
+          card_number?: string | null
+          extra_notes?: string | null
+          product_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_secrets_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: true
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           category_id: string | null
@@ -448,15 +531,18 @@ export type Database = {
           price: number
           product_notes: string | null
           product_type: Database["public"]["Enums"]["product_type"]
+          provider_label: string | null
           rating: number
           short_description: string | null
           slug: string
+          stock_kind: string
           stock_quantity: number
           tags: string[]
           title: string
           total_sales: number
           unlimited_stock: boolean
           updated_at: string
+          usage_window: string | null
           view_count: number
           warranty_details: string | null
         }
@@ -477,15 +563,18 @@ export type Database = {
           price: number
           product_notes?: string | null
           product_type?: Database["public"]["Enums"]["product_type"]
+          provider_label?: string | null
           rating?: number
           short_description?: string | null
           slug: string
+          stock_kind?: string
           stock_quantity?: number
           tags?: string[]
           title: string
           total_sales?: number
           unlimited_stock?: boolean
           updated_at?: string
+          usage_window?: string | null
           view_count?: number
           warranty_details?: string | null
         }
@@ -506,15 +595,18 @@ export type Database = {
           price?: number
           product_notes?: string | null
           product_type?: Database["public"]["Enums"]["product_type"]
+          provider_label?: string | null
           rating?: number
           short_description?: string | null
           slug?: string
+          stock_kind?: string
           stock_quantity?: number
           tags?: string[]
           title?: string
           total_sales?: number
           unlimited_stock?: boolean
           updated_at?: string
+          usage_window?: string | null
           view_count?: number
           warranty_details?: string | null
         }
@@ -533,6 +625,7 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           cc_code: string
+          community_code: string | null
           created_at: string
           email: string | null
           full_name: string | null
@@ -547,6 +640,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           cc_code: string
+          community_code?: string | null
           created_at?: string
           email?: string | null
           full_name?: string | null
@@ -561,6 +655,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           cc_code?: string
+          community_code?: string | null
           created_at?: string
           email?: string | null
           full_name?: string | null
@@ -621,6 +716,30 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      visits: {
+        Row: {
+          created_at: string
+          id: number
+          path: string | null
+          user_id: string | null
+          visitor_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          path?: string | null
+          user_id?: string | null
+          visitor_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          path?: string | null
+          user_id?: string | null
+          visitor_id?: string | null
         }
         Relationships: []
       }

@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Shield, Zap, BadgeCheck, MessagesSquare, ArrowRight, Package, Code, Repeat, Gift, Gamepad2, Box, Sparkles, Activity } from "lucide-react";
+import { Shield, Zap, BadgeCheck, MessagesSquare, ArrowRight, Package, Code, Repeat, Gift, Gamepad2, Box, Sparkles, Activity, LogIn } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { AppShell } from "@/components/app-shell";
@@ -22,21 +23,51 @@ export const Route = createFileRoute("/")({
 
 const iconMap: Record<string, any> = { package: Package, code: Code, repeat: Repeat, gift: Gift, "gamepad-2": Gamepad2, box: Box };
 
+function getOrCreateVisitorId() {
+  try {
+    const k = "ccwhale_visitor_id";
+    let v = localStorage.getItem(k);
+    if (!v) { v = crypto.randomUUID(); localStorage.setItem(k, v); }
+    return v;
+  } catch { return crypto.randomUUID(); }
+}
+
 function Landing() {
+  // Track a visit once per session
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem("ccwhale_visit_logged") === "1") return;
+      const vid = getOrCreateVisitorId();
+      supabase.from("visits").insert({ visitor_id: vid, path: "/" }).then(() => {
+        sessionStorage.setItem("ccwhale_visit_logged", "1");
+      });
+    } catch {}
+  }, []);
+
   const { data: stats } = useQuery({
     queryKey: ["landing-stats"],
     queryFn: async () => {
-      const [users, products, orders] = await Promise.all([
+      const since24h = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+      const since5m = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+      const sinceToday = new Date(); sinceToday.setHours(0, 0, 0, 0);
+      const [users, products, orders, visits24, live, joinedToday] = await Promise.all([
         supabase.from("profiles").select("*", { count: "exact", head: true }),
         supabase.from("products").select("*", { count: "exact", head: true }).eq("is_hidden", false),
         supabase.from("orders").select("*", { count: "exact", head: true }).eq("status", "completed"),
+        supabase.from("visits").select("*", { count: "exact", head: true }).gte("created_at", since24h),
+        supabase.from("visits").select("*", { count: "exact", head: true }).gte("created_at", since5m),
+        supabase.from("profiles").select("*", { count: "exact", head: true }).gte("created_at", sinceToday.toISOString()),
       ]);
       return {
         users: users.count ?? 0,
         products: products.count ?? 0,
         orders: orders.count ?? 0,
+        visits24: visits24.count ?? 0,
+        live: live.count ?? 0,
+        joinedToday: joinedToday.count ?? 0,
       };
     },
+    refetchInterval: 15000,
   });
 
   const { data: categories } = useQuery({
@@ -58,7 +89,7 @@ function Landing() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("id,title,slug,price,cover_image,rating,product_type,short_description")
+        .select("id,title,slug,price,cover_image,rating,product_type,short_description,stock_kind")
         .eq("is_hidden", false)
         .order("created_at", { ascending: false })
         .limit(8);
@@ -110,24 +141,29 @@ function Landing() {
             </div>
           </motion.div>
 
-          {/* Stats strip */}
-          <div className="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Stats strip - live metrics */}
+          <div className="mt-16 grid grid-cols-2 lg:grid-cols-6 gap-4">
             {[
-              { label: "Registered Users", value: stats?.users ?? 0, color: "neon-cyan" },
-              { label: "Active Listings", value: stats?.products ?? 0, color: "neon-blue" },
-              { label: "Orders Completed", value: stats?.orders ?? 0, color: "neon-violet" },
-              { label: "Uptime", value: 99, suffix: ".9%", color: "neon-pink" },
-            ].map((s, i) => (
+              { label: "Live now", value: stats?.live ?? 0, color: "neon-cyan", pulse: true },
+              { label: "Visits / 24h", value: stats?.visits24 ?? 0, color: "neon-blue" },
+              { label: "Joined today", value: stats?.joinedToday ?? 0, color: "neon-pink" },
+              { label: "Total users", value: stats?.users ?? 0, color: "neon-cyan" },
+              { label: "Active listings", value: stats?.products ?? 0, color: "neon-violet" },
+              { label: "Orders done", value: stats?.orders ?? 0, color: "neon-pink" },
+            ].map((s: any, i: number) => (
               <motion.div
                 key={s.label}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + i * 0.07 }}
-                className="glass rounded-2xl p-5 relative overflow-hidden"
+                transition={{ delay: 0.2 + i * 0.05 }}
+                className="glass rounded-2xl p-4 relative overflow-hidden"
               >
-                <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">{s.label}</p>
-                <p className={`mt-2 font-display text-3xl font-bold text-${s.color}`} style={{ textShadow: `0 0 16px var(--${s.color})` }}>
-                  <CountUp to={s.value} suffix={s.suffix} />
+                <div className="flex items-center gap-1.5">
+                  {s.pulse && <span className="size-1.5 rounded-full bg-neon-cyan animate-pulse" />}
+                  <p className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">{s.label}</p>
+                </div>
+                <p className={`mt-1 font-display text-2xl font-bold text-${s.color}`} style={{ textShadow: `0 0 16px var(--${s.color})` }}>
+                  <CountUp to={s.value} />
                 </p>
               </motion.div>
             ))}
@@ -190,26 +226,37 @@ function Landing() {
 
         {featured && featured.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {featured.map((p) => (
-              <Link key={p.id} to="/product/$id" params={{ id: p.id }} className="group glass rounded-2xl overflow-hidden hover:border-neon-cyan/50 transition-all">
-                <div className="aspect-square bg-surface/50 relative overflow-hidden">
-                  {p.cover_image ? (
-                    <img src={p.cover_image} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                  ) : (
-                    <div className="w-full h-full grid place-items-center text-muted-foreground/40 font-mono text-xs">PREVIEW</div>
-                  )}
-                  <div className="absolute top-2 right-2 px-2 py-0.5 rounded glass text-[10px] font-mono uppercase">{p.product_type.replace("_", " ")}</div>
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-sm line-clamp-1">{p.title}</h3>
-                  <p className="text-xs text-muted-foreground line-clamp-1 mt-1">{p.short_description}</p>
-                  <div className="mt-3 flex items-center justify-between">
-                    <span className="font-mono text-neon-cyan font-bold">${p.price}</span>
-                    <span className="text-[10px] text-muted-foreground">★ {p.rating ?? 0}</span>
+            {featured.map((p: any) => {
+              const isCard = p.stock_kind === "card";
+              return (
+                <Link key={p.id} to="/product/$id" params={{ id: p.id }} className="group glass rounded-2xl overflow-hidden hover:border-neon-cyan/50 transition-all">
+                  <div className={`aspect-square relative overflow-hidden ${isCard ? "bg-gradient-to-br from-neon-violet/20 via-neon-cyan/10 to-background" : "bg-surface/50"}`}>
+                    {isCard ? (
+                      <div className="absolute inset-0 grid place-items-center text-center p-4">
+                        <div>
+                          <div className="font-mono text-xs text-neon-violet uppercase tracking-widest mb-2">CARD</div>
+                          <div className="font-mono text-lg font-bold">XXXX XXXX XXXX XXXX</div>
+                          <div className="font-mono text-[10px] text-muted-foreground mt-2">CVV ••• &nbsp; EXP ••/••</div>
+                        </div>
+                      </div>
+                    ) : p.cover_image ? (
+                      <img src={p.cover_image} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                    ) : (
+                      <div className="w-full h-full grid place-items-center text-muted-foreground/40 font-mono text-xs">PREVIEW</div>
+                    )}
+                    <div className="absolute top-2 right-2 px-2 py-0.5 rounded glass text-[10px] font-mono uppercase">{p.stock_kind ?? p.product_type.replace("_", " ")}</div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                  <div className="p-4">
+                    <h3 className="font-semibold text-sm line-clamp-1">{p.title}</h3>
+                    <p className="text-xs text-muted-foreground line-clamp-1 mt-1">{p.short_description}</p>
+                    <div className="mt-3 flex items-center justify-between">
+                      <span className="font-mono text-neon-cyan font-bold">${p.price}</span>
+                      <span className="text-[10px] text-muted-foreground">★ {p.rating ?? 0}</span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         ) : (
           <GlassCard className="p-12 text-center text-muted-foreground">

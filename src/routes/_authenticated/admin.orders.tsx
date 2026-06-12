@@ -46,6 +46,21 @@ function AdminOrders() {
     setSelected(null); setDelivery("");
   };
 
+  const autofillFromSecrets = async () => {
+    if (!selected) return;
+    const productId = selected.order_items?.[0]?.product_id;
+    if (!productId) { toast.error("No product on this order"); return; }
+    const { data } = await supabase.from("product_secrets").select("*").eq("product_id", productId).maybeSingle();
+    if (!data) { toast.error("No secrets stored for this product"); return; }
+    const payload = {
+      card_number: data.card_number, card_cvv: data.card_cvv, card_exp: data.card_exp,
+      account_login: data.account_login, account_password: data.account_password, account_balance: data.account_balance,
+      extra_notes: data.extra_notes,
+    };
+    setDelivery(JSON.stringify(payload, null, 2));
+    toast.success("Vault loaded — review then mark delivered");
+  };
+
   return (
     <div>
       <div className="flex gap-2 mb-4 flex-wrap">
@@ -88,8 +103,11 @@ function AdminOrders() {
                 </Select>
               </div>
               <div>
-                <label className="text-xs">Delivery payload (keys, credentials, instructions)</label>
-                <Textarea value={delivery} onChange={(e) => setDelivery(e.target.value)} rows={5} className="bg-input/40 font-mono text-xs" />
+                <div className="flex justify-between items-center">
+                  <label className="text-xs">Delivery payload (JSON shape recommended)</label>
+                  <Button size="sm" variant="outline" onClick={autofillFromSecrets}>Auto-fill from vault</Button>
+                </div>
+                <Textarea value={delivery} onChange={(e) => setDelivery(e.target.value)} rows={6} className="bg-input/40 font-mono text-xs" placeholder='{"card_number":"...", "card_cvv":"...", "card_exp":"MM/YY"}' />
               </div>
               <Button onClick={() => updateStatus(selected.id, "delivered")} className="w-full bg-primary text-primary-foreground">Mark delivered with payload</Button>
             </div>
