@@ -111,7 +111,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Mobile bottom nav */}
       {user && (
         <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 glass-strong border-t border-border/40">
-          <div className="grid grid-cols-5 h-16">
+          <div className="grid grid-cols-4 h-16">
             {navItems.map((item) => {
               const active = pathname === item.to || (item.to !== "/" && pathname.startsWith(item.to));
               const Icon = item.icon;
