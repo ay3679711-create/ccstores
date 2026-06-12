@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Shield, Zap, BadgeCheck, MessagesSquare, ArrowRight, Package, Code, Repeat, Gift, Gamepad2, Box, Sparkles, Activity } from "lucide-react";
+import { Shield, Zap, BadgeCheck, MessagesSquare, ArrowRight, Package, Code, Repeat, Gift, Gamepad2, Box, Sparkles, Activity, LogIn } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { AppShell } from "@/components/app-shell";
@@ -22,21 +23,51 @@ export const Route = createFileRoute("/")({
 
 const iconMap: Record<string, any> = { package: Package, code: Code, repeat: Repeat, gift: Gift, "gamepad-2": Gamepad2, box: Box };
 
+function getOrCreateVisitorId() {
+  try {
+    const k = "ccwhale_visitor_id";
+    let v = localStorage.getItem(k);
+    if (!v) { v = crypto.randomUUID(); localStorage.setItem(k, v); }
+    return v;
+  } catch { return crypto.randomUUID(); }
+}
+
 function Landing() {
+  // Track a visit once per session
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem("ccwhale_visit_logged") === "1") return;
+      const vid = getOrCreateVisitorId();
+      supabase.from("visits").insert({ visitor_id: vid, path: "/" }).then(() => {
+        sessionStorage.setItem("ccwhale_visit_logged", "1");
+      });
+    } catch {}
+  }, []);
+
   const { data: stats } = useQuery({
     queryKey: ["landing-stats"],
     queryFn: async () => {
-      const [users, products, orders] = await Promise.all([
+      const since24h = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+      const since5m = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+      const sinceToday = new Date(); sinceToday.setHours(0, 0, 0, 0);
+      const [users, products, orders, visits24, live, joinedToday] = await Promise.all([
         supabase.from("profiles").select("*", { count: "exact", head: true }),
         supabase.from("products").select("*", { count: "exact", head: true }).eq("is_hidden", false),
         supabase.from("orders").select("*", { count: "exact", head: true }).eq("status", "completed"),
+        supabase.from("visits").select("*", { count: "exact", head: true }).gte("created_at", since24h),
+        supabase.from("visits").select("*", { count: "exact", head: true }).gte("created_at", since5m),
+        supabase.from("profiles").select("*", { count: "exact", head: true }).gte("created_at", sinceToday.toISOString()),
       ]);
       return {
         users: users.count ?? 0,
         products: products.count ?? 0,
         orders: orders.count ?? 0,
+        visits24: visits24.count ?? 0,
+        live: live.count ?? 0,
+        joinedToday: joinedToday.count ?? 0,
       };
     },
+    refetchInterval: 15000,
   });
 
   const { data: categories } = useQuery({
@@ -58,7 +89,7 @@ function Landing() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("id,title,slug,price,cover_image,rating,product_type,short_description")
+        .select("id,title,slug,price,cover_image,rating,product_type,short_description,stock_kind")
         .eq("is_hidden", false)
         .order("created_at", { ascending: false })
         .limit(8);
