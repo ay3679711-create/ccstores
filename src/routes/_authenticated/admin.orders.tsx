@@ -103,8 +103,11 @@ function AdminOrders() {
                 </Select>
               </div>
               <div>
-                <label className="text-xs">Delivery payload (keys, credentials, instructions)</label>
-                <Textarea value={delivery} onChange={(e) => setDelivery(e.target.value)} rows={5} className="bg-input/40 font-mono text-xs" />
+                <div className="flex justify-between items-center">
+                  <label className="text-xs">Delivery payload (JSON shape recommended)</label>
+                  <Button size="sm" variant="outline" onClick={autofillFromSecrets}>Auto-fill from vault</Button>
+                </div>
+                <Textarea value={delivery} onChange={(e) => setDelivery(e.target.value)} rows={6} className="bg-input/40 font-mono text-xs" placeholder='{"card_number":"...", "card_cvv":"...", "card_exp":"MM/YY"}' />
               </div>
               <Button onClick={() => updateStatus(selected.id, "delivered")} className="w-full bg-primary text-primary-foreground">Mark delivered with payload</Button>
             </div>
