@@ -150,12 +150,21 @@ function AdminMessages() {
       </TabsContent>
 
       <TabsContent value="broadcast">
-        <GlassCard className="p-6 space-y-3">
-          <div className="flex items-center gap-2 mb-2"><Megaphone className="size-4 text-neon-violet" /><h3 className="font-semibold">Broadcast notification to all users</h3></div>
-          <Input placeholder="Title" value={bcast.title} onChange={(e) => setBcast({ ...bcast, title: e.target.value })} maxLength={200} className="bg-input/40" />
-          <Textarea placeholder="Body" rows={4} value={bcast.body} onChange={(e) => setBcast({ ...bcast, body: e.target.value })} maxLength={1000} className="bg-input/40" />
-          <Button onClick={broadcast} className="bg-primary text-primary-foreground"><Send className="size-4 mr-2" /> Send broadcast</Button>
-        </GlassCard>
+        <div className="grid lg:grid-cols-2 gap-4">
+          <GlassCard className="p-6 space-y-3">
+            <div className="flex items-center gap-2 mb-2"><Megaphone className="size-4 text-neon-violet" /><h3 className="font-semibold">Broadcast to ALL users</h3></div>
+            <Input placeholder="Title" value={bcast.title} onChange={(e) => setBcast({ ...bcast, title: e.target.value })} maxLength={200} className="bg-input/40" />
+            <Textarea placeholder="Body" rows={4} value={bcast.body} onChange={(e) => setBcast({ ...bcast, body: e.target.value })} maxLength={1000} className="bg-input/40" />
+            <Button onClick={broadcast} className="bg-primary text-primary-foreground"><Send className="size-4 mr-2" /> Send broadcast</Button>
+          </GlassCard>
+          <GlassCard className="p-6 space-y-3">
+            <div className="flex items-center gap-2 mb-2"><Send className="size-4 text-neon-cyan" /><h3 className="font-semibold">Send to single user (by CC code)</h3></div>
+            <Input placeholder="CC code (e.g. CC42)" value={dm.cc_code} onChange={(e) => setDm({ ...dm, cc_code: e.target.value })} maxLength={20} className="bg-input/40 font-mono uppercase" />
+            <Input placeholder="Title" value={dm.title} onChange={(e) => setDm({ ...dm, title: e.target.value })} maxLength={200} className="bg-input/40" />
+            <Textarea placeholder="Message" rows={4} value={dm.body} onChange={(e) => setDm({ ...dm, body: e.target.value })} maxLength={1000} className="bg-input/40" />
+            <Button onClick={sendDm} className="bg-neon-cyan/20 text-neon-cyan hover:bg-neon-cyan/30"><Send className="size-4 mr-2" /> Send to user</Button>
+          </GlassCard>
+        </div>
       </TabsContent>
     </Tabs>
   );
