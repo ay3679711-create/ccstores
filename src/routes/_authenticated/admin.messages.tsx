@@ -74,6 +74,19 @@ function AdminMessages() {
     setBcast({ title: "", body: "" });
   };
 
+  const [dm, setDm] = useState({ cc_code: "", title: "", body: "" });
+  const sendDm = async () => {
+    if (!dm.cc_code || !dm.title) return;
+    const { data: target } = await supabase.from("profiles").select("id, cc_code").eq("cc_code", dm.cc_code.trim().toUpperCase()).maybeSingle();
+    if (!target) { toast.error("No user with that CC code"); return; }
+    const { error } = await supabase.from("notifications").insert({
+      user_id: target.id, type: "announcement", title: dm.title, body: dm.body,
+    });
+    if (error) { toast.error(error.message); return; }
+    toast.success(`Sent to ${target.cc_code}`);
+    setDm({ cc_code: "", title: "", body: "" });
+  };
+
   return (
     <Tabs defaultValue="chats">
       <TabsList className="bg-surface/40">
