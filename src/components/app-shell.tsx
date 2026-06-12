@@ -107,6 +107,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <main className="flex-1 pb-20 md:pb-0">{children}</main>
 
+      {user && <WelcomePopup />}
+
       {/* Mobile bottom nav */}
       {user && (
         <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 glass-strong border-t border-border/40">
