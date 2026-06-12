@@ -226,16 +226,26 @@ function Landing() {
 
         {featured && featured.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {featured.map((p) => (
-              <Link key={p.id} to="/product/$id" params={{ id: p.id }} className="group glass rounded-2xl overflow-hidden hover:border-neon-cyan/50 transition-all">
-                <div className="aspect-square bg-surface/50 relative overflow-hidden">
-                  {p.cover_image ? (
-                    <img src={p.cover_image} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                  ) : (
-                    <div className="w-full h-full grid place-items-center text-muted-foreground/40 font-mono text-xs">PREVIEW</div>
-                  )}
-                  <div className="absolute top-2 right-2 px-2 py-0.5 rounded glass text-[10px] font-mono uppercase">{p.product_type.replace("_", " ")}</div>
-                </div>
+            {featured.map((p: any) => {
+              const isCard = p.stock_kind === "card";
+              return (
+                <Link key={p.id} to="/product/$id" params={{ id: p.id }} className="group glass rounded-2xl overflow-hidden hover:border-neon-cyan/50 transition-all">
+                  <div className={`aspect-square relative overflow-hidden ${isCard ? "bg-gradient-to-br from-neon-violet/20 via-neon-cyan/10 to-background" : "bg-surface/50"}`}>
+                    {isCard ? (
+                      <div className="absolute inset-0 grid place-items-center text-center p-4">
+                        <div>
+                          <div className="font-mono text-xs text-neon-violet uppercase tracking-widest mb-2">CARD</div>
+                          <div className="font-mono text-lg font-bold">XXXX XXXX XXXX XXXX</div>
+                          <div className="font-mono text-[10px] text-muted-foreground mt-2">CVV ••• &nbsp; EXP ••/••</div>
+                        </div>
+                      </div>
+                    ) : p.cover_image ? (
+                      <img src={p.cover_image} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                    ) : (
+                      <div className="w-full h-full grid place-items-center text-muted-foreground/40 font-mono text-xs">PREVIEW</div>
+                    )}
+                    <div className="absolute top-2 right-2 px-2 py-0.5 rounded glass text-[10px] font-mono uppercase">{p.stock_kind ?? p.product_type.replace("_", " ")}</div>
+                  </div>
                 <div className="p-4">
                   <h3 className="font-semibold text-sm line-clamp-1">{p.title}</h3>
                   <p className="text-xs text-muted-foreground line-clamp-1 mt-1">{p.short_description}</p>
