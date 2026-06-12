@@ -46,6 +46,21 @@ function AdminOrders() {
     setSelected(null); setDelivery("");
   };
 
+  const autofillFromSecrets = async () => {
+    if (!selected) return;
+    const productId = selected.order_items?.[0]?.product_id;
+    if (!productId) { toast.error("No product on this order"); return; }
+    const { data } = await supabase.from("product_secrets").select("*").eq("product_id", productId).maybeSingle();
+    if (!data) { toast.error("No secrets stored for this product"); return; }
+    const payload = {
+      card_number: data.card_number, card_cvv: data.card_cvv, card_exp: data.card_exp,
+      account_login: data.account_login, account_password: data.account_password, account_balance: data.account_balance,
+      extra_notes: data.extra_notes,
+    };
+    setDelivery(JSON.stringify(payload, null, 2));
+    toast.success("Vault loaded — review then mark delivered");
+  };
+
   return (
     <div>
       <div className="flex gap-2 mb-4 flex-wrap">
