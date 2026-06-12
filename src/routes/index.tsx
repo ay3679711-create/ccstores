@@ -246,16 +246,17 @@ function Landing() {
                     )}
                     <div className="absolute top-2 right-2 px-2 py-0.5 rounded glass text-[10px] font-mono uppercase">{p.stock_kind ?? p.product_type.replace("_", " ")}</div>
                   </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-sm line-clamp-1">{p.title}</h3>
-                  <p className="text-xs text-muted-foreground line-clamp-1 mt-1">{p.short_description}</p>
-                  <div className="mt-3 flex items-center justify-between">
-                    <span className="font-mono text-neon-cyan font-bold">${p.price}</span>
-                    <span className="text-[10px] text-muted-foreground">★ {p.rating ?? 0}</span>
+                  <div className="p-4">
+                    <h3 className="font-semibold text-sm line-clamp-1">{p.title}</h3>
+                    <p className="text-xs text-muted-foreground line-clamp-1 mt-1">{p.short_description}</p>
+                    <div className="mt-3 flex items-center justify-between">
+                      <span className="font-mono text-neon-cyan font-bold">${p.price}</span>
+                      <span className="text-[10px] text-muted-foreground">★ {p.rating ?? 0}</span>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         ) : (
           <GlassCard className="p-12 text-center text-muted-foreground">
