@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { WelcomePopup } from "@/components/welcome-popup";
 import type { ReactNode } from "react";
 
 const navItems = [
