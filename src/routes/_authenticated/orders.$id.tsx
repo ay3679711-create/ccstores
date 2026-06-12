@@ -131,7 +131,7 @@ function OrderDetail() {
   let congrats = "";
   if (isDelivered && appSettings?.delivery_message_template) {
     let parsed: any = {};
-    try { parsed = JSON.parse(order.delivery_payload); } catch { parsed = { raw: order.delivery_payload }; }
+    try { parsed = JSON.parse(order.delivery_payload ?? "{}"); } catch { parsed = { raw: order.delivery_payload }; }
     congrats = renderTemplate(appSettings.delivery_message_template, {
       card_number: parsed.card_number ?? "—",
       card_cvv: parsed.card_cvv ?? "—",
