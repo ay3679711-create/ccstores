@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Upload } from "lucide-react";
+import { Upload, Copy, MessageSquare, Users, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth, useProfile } from "@/hooks/use-auth";
 import { useQueryClient } from "@tanstack/react-query";
@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { GlassCard, NeonHeading } from "@/components/cyber-ui";
 import { Badge } from "@/components/ui/badge";
+import { deriveAdminChatCode } from "@/lib/user-codes";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   component: ProfilePage,
