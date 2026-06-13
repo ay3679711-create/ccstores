@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SuspendedRouteImport } from './routes/suspended'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -29,6 +30,11 @@ import { Route as AuthenticatedAdminPaymentsRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminOrdersRouteImport } from './routes/_authenticated/admin.orders'
 import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authenticated/admin.messages'
 
+const SuspendedRoute = SuspendedRouteImport.update({
+  id: '/suspended',
+  path: '/suspended',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -134,6 +140,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/marketplace': typeof MarketplaceRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/suspended': typeof SuspendedRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/community': typeof AuthenticatedCommunityRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -154,6 +161,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/marketplace': typeof MarketplaceRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/suspended': typeof SuspendedRoute
   '/community': typeof AuthenticatedCommunityRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
@@ -175,6 +183,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/marketplace': typeof MarketplaceRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/suspended': typeof SuspendedRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/community': typeof AuthenticatedCommunityRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -197,6 +206,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/marketplace'
     | '/sitemap.xml'
+    | '/suspended'
     | '/admin'
     | '/community'
     | '/dashboard'
@@ -217,6 +227,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/marketplace'
     | '/sitemap.xml'
+    | '/suspended'
     | '/community'
     | '/dashboard'
     | '/notifications'
@@ -237,6 +248,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/marketplace'
     | '/sitemap.xml'
+    | '/suspended'
     | '/_authenticated/admin'
     | '/_authenticated/community'
     | '/_authenticated/dashboard'
@@ -259,11 +271,19 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   MarketplaceRoute: typeof MarketplaceRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SuspendedRoute: typeof SuspendedRoute
   ProductIdRoute: typeof ProductIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/suspended': {
+      id: '/suspended'
+      path: '/suspended'
+      fullPath: '/suspended'
+      preLoaderRoute: typeof SuspendedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -459,8 +479,19 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   MarketplaceRoute: MarketplaceRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SuspendedRoute: SuspendedRoute,
   ProductIdRoute: ProductIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
