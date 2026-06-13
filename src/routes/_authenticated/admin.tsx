@@ -1,7 +1,10 @@
 import { createFileRoute, Outlet, Link, useRouterState, redirect } from "@tanstack/react-router";
-import { Shield, LayoutDashboard, Users, Package, ShoppingBag, CreditCard, MessageSquare } from "lucide-react";
+import { LayoutDashboard, Users, Package, ShoppingBag, CreditCard, MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/app-shell";
+import { SmokeLogo } from "@/components/smoke-logo";
+
+
 
 export const Route = createFileRoute("/_authenticated/admin")({
   beforeLoad: async () => {
@@ -27,9 +30,16 @@ function AdminLayout() {
   return (
     <AppShell>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-        <div className="flex items-center gap-2 mb-6">
-          <Shield className="size-5 text-neon-violet" />
-          <h1 className="font-display text-2xl font-bold">Admin Panel</h1>
+        <div className="flex items-center gap-3 mb-6">
+          <SmokeLogo size={56} label="CC" />
+          <div>
+            <h1 className="font-display text-2xl font-bold leading-none">
+              CC Whale <span className="text-muted-foreground text-base font-normal">// Admin</span>
+            </h1>
+            <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground mt-1">
+              operator control deck
+            </p>
+          </div>
         </div>
         <div className="flex flex-wrap gap-2 mb-6 border-b border-border pb-3">
           {adminNav.map((n) => {
