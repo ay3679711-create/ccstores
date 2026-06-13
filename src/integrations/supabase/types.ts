@@ -633,6 +633,9 @@ export type Database = {
           is_suspended: boolean
           last_login_at: string | null
           phone: string | null
+          suspend_reason: string | null
+          suspended_at: string | null
+          suspended_until: string | null
           updated_at: string
           visit_count: number
         }
@@ -648,6 +651,9 @@ export type Database = {
           is_suspended?: boolean
           last_login_at?: string | null
           phone?: string | null
+          suspend_reason?: string | null
+          suspended_at?: string | null
+          suspended_until?: string | null
           updated_at?: string
           visit_count?: number
         }
@@ -663,6 +669,9 @@ export type Database = {
           is_suspended?: boolean
           last_login_at?: string | null
           phone?: string | null
+          suspend_reason?: string | null
+          suspended_at?: string | null
+          suspended_until?: string | null
           updated_at?: string
           visit_count?: number
         }
@@ -755,6 +764,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_user_suspended: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
