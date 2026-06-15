@@ -161,6 +161,18 @@ function OrderDetail() {
           </div>
         </div>
 
+        {/* Share-to-earn promo */}
+        <div className="mb-6 glass rounded-2xl p-4 border border-neon-pink/30 bg-gradient-to-r from-neon-pink/10 via-neon-violet/10 to-neon-cyan/10 backdrop-blur-xl flex items-start gap-3">
+          <Sparkles className="size-5 text-neon-pink shrink-0 mt-0.5" />
+          <div className="text-sm">
+            <p className="font-semibold text-neon-pink">Share us & earn a special badge + free cards 🎁</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Post about our website (Instagram, Telegram, YouTube, Twitter — anywhere) and send proof to admin chat.
+              You'll get a verified <span className="text-neon-violet font-semibold">SHARER badge</span> on your profile and free bonus cards on your next order.
+            </p>
+          </div>
+        </div>
+
         {/* Countdown timer */}
         {countdown && hasPayment && !isDelivered && (
           <GlassCard className={`p-6 mb-6 border ${countdown.expired ? "border-destructive/50" : "border-neon-cyan/40"}`} glow>
