@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Search, Shield, ShieldOff, Ban, ShieldCheck } from "lucide-react";
+import { Search, Shield, ShieldOff, Ban, ShieldCheck, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -122,7 +122,10 @@ function AdminUsers() {
                         {u.suspend_reason && <span className="text-[10px] text-muted-foreground italic max-w-[180px] truncate" title={u.suspend_reason}>{u.suspend_reason}</span>}
                       </div>
                     ) : (
-                      <Badge className="bg-green-500/20 text-green-300">Active</Badge>
+                      <div className="flex flex-col gap-1">
+                        <Badge className="bg-green-500/20 text-green-300">Active</Badge>
+                        {u.has_special_badge && <Badge className="bg-yellow-500/20 text-yellow-300">★ Special Badge</Badge>}
+                      </div>
                     )}
                     {isAdmin && <Badge className="ml-1 bg-neon-violet/20 text-neon-violet">Admin</Badge>}
                   </td>
@@ -138,6 +141,14 @@ function AdminUsers() {
                     )}
                     <Button size="sm" variant="ghost" onClick={() => toggleAdmin(u.id, isAdmin)} title={isAdmin ? "Revoke admin" : "Grant admin"}>
                       <Shield className={`size-3.5 ${isAdmin ? "text-neon-violet" : ""}`} />
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={async () => {
+                      const { error } = await supabase.from('profiles').update({ has_special_badge: !u.has_special_badge }).eq('id', u.id);
+                      if (error) toast.error(error.message);
+                      else toast.success(u.has_special_badge ? "Removed badge" : "Granted special badge");
+                      qc.invalidateQueries({ queryKey: ["admin-users"] });
+                    }} title={u.has_special_badge ? "Remove special badge" : "Grant special badge"}>
+                      <Sparkles className={`size-3.5 ${u.has_special_badge ? "text-yellow-400" : ""}`} />
                     </Button>
                   </td>
                 </tr>

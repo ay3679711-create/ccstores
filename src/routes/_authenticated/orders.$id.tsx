@@ -218,7 +218,13 @@ function OrderDetail() {
         {isDelivered && (
           <GlassCard className="p-6 mb-6 border-neon-cyan/50" glow>
             <h3 className="font-semibold mb-2 text-neon-cyan flex items-center gap-2"><Sparkles className="size-4" /> Congratulations!</h3>
-            <p className="text-sm whitespace-pre-wrap mb-3">{congrats || order.delivery_payload}</p>
+            <p className="text-sm whitespace-pre-wrap mb-4">{congrats || order.delivery_payload}</p>
+            
+            <div className="bg-neon-violet/10 border border-neon-violet/30 p-4 rounded-lg mb-4">
+              <p className="text-xs font-semibold text-neon-violet uppercase tracking-wider mb-2">Special Offer</p>
+              <p className="text-sm text-muted-foreground">Aik special badge milega agar tum hamare website ke bare mai daloge (social media, etc). Contact admin after sharing to get your badge and free cards!</p>
+            </div>
+
             <details className="text-xs">
               <summary className="cursor-pointer text-muted-foreground">Raw delivery payload</summary>
               <pre className="text-xs whitespace-pre-wrap bg-background/50 p-3 rounded-lg font-mono mt-2">{order.delivery_payload}</pre>
