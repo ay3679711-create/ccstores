@@ -27,6 +27,9 @@ function emptyForm() {
     product_type: "digital", category_id: "", cover_image: "", tags: "",
     delivery_instructions: "", warranty_details: "", is_featured: false,
     stock_kind: "account", provider_label: "", usage_window: "",
+    account_email: "", account_password: "", account_balance: 0,
+    card_number: "", card_cvv: "", card_holder: "", card_country: "",
+    bin: "", card_price: 0, inner_price: 0, delivery_description: ""
   };
 }
 
@@ -67,6 +70,9 @@ function AdminProducts() {
       delivery_instructions: form.delivery_instructions, warranty_details: form.warranty_details,
       is_featured: form.is_featured,
       stock_kind: form.stock_kind, provider_label: form.provider_label, usage_window: form.usage_window,
+      account_email: form.account_email, account_password: form.account_password, account_balance: form.account_balance,
+      card_number: form.card_number, card_cvv: form.card_cvv, card_holder: form.card_holder, card_country: form.card_country,
+      bin: form.bin, card_price: form.card_price, inner_price: form.inner_price, delivery_description: form.delivery_description,
       created_by: user!.id,
     };
     if (editId) {
@@ -143,6 +149,18 @@ function AdminProducts() {
             <DialogHeader><DialogTitle>{editId ? "Edit product" : "New product"}</DialogTitle></DialogHeader>
             <div className="grid sm:grid-cols-2 gap-3">
               <div className="sm:col-span-2"><Label className="text-xs">Title</Label><Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="bg-input/40" /></div>
+              
+              <div>
+                <Label className="text-xs">Category</Label>
+                <Select value={form.category_id || undefined} onValueChange={(v) => {
+                  const cat = categories?.find(c => c.id === v);
+                  setForm({ ...form, category_id: v, stock_kind: cat?.name === 'debit card' ? 'card' : (cat?.name === 'loded account' ? 'account' : form.stock_kind) });
+                }}>
+                  <SelectTrigger className="bg-input/40"><SelectValue placeholder="None" /></SelectTrigger>
+                  <SelectContent>{categories?.map((c: any) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
+                </Select>
+              </div>
+
               <div>
                 <Label className="text-xs">Stock kind (drives delivery form)</Label>
                 <Select value={form.stock_kind} onValueChange={(v) => setForm({ ...form, stock_kind: v })}>
@@ -150,6 +168,30 @@ function AdminProducts() {
                   <SelectContent>{STOCK_KINDS.map((k) => <SelectItem key={k} value={k}>{k}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
+
+              {form.stock_kind === 'card' && (
+                <div className="sm:col-span-2 grid sm:grid-cols-2 gap-3 p-3 border border-neon-cyan/20 rounded-lg bg-neon-cyan/5">
+                  <p className="sm:col-span-2 text-[10px] font-mono uppercase text-neon-cyan">Card specific fields</p>
+                  <div><Label className="text-xs">Card Number</Label><Input value={form.card_number} onChange={(e) => setForm({ ...form, card_number: e.target.value })} className="bg-input/40" /></div>
+                  <div><Label className="text-xs">CVV</Label><Input value={form.card_cvv} onChange={(e) => setForm({ ...form, card_cvv: e.target.value })} className="bg-input/40" /></div>
+                  <div><Label className="text-xs">Card Holder</Label><Input value={form.card_holder} onChange={(e) => setForm({ ...form, card_holder: e.target.value })} className="bg-input/40" /></div>
+                  <div><Label className="text-xs">Country</Label><Input value={form.card_country} onChange={(e) => setForm({ ...form, card_country: e.target.value })} className="bg-input/40" /></div>
+                  <div><Label className="text-xs">BIN</Label><Input value={form.bin} onChange={(e) => setForm({ ...form, bin: e.target.value })} className="bg-input/40" /></div>
+                  <div><Label className="text-xs">Card Price</Label><Input type="number" value={form.card_price} onChange={(e) => setForm({ ...form, card_price: parseFloat(e.target.value) })} className="bg-input/40" /></div>
+                  <div><Label className="text-xs">Inner Price</Label><Input type="number" value={form.inner_price} onChange={(e) => setForm({ ...form, inner_price: parseFloat(e.target.value) })} className="bg-input/40" /></div>
+                </div>
+              )}
+
+              {form.stock_kind === 'account' && (
+                <div className="sm:col-span-2 grid sm:grid-cols-2 gap-3 p-3 border border-neon-violet/20 rounded-lg bg-neon-violet/5">
+                  <p className="sm:col-span-2 text-[10px] font-mono uppercase text-neon-violet">Account specific fields</p>
+                  <div><Label className="text-xs">Email</Label><Input value={form.account_email} onChange={(e) => setForm({ ...form, account_email: e.target.value })} className="bg-input/40" /></div>
+                  <div><Label className="text-xs">Password</Label><Input value={form.account_password} onChange={(e) => setForm({ ...form, account_password: e.target.value })} className="bg-input/40" /></div>
+                  <div><Label className="text-xs">Balance</Label><Input type="number" value={form.account_balance} onChange={(e) => setForm({ ...form, account_balance: parseFloat(e.target.value) })} className="bg-input/40" /></div>
+                  <div className="sm:col-span-2"><Label className="text-xs">Delivery Description</Label><Textarea rows={2} value={form.delivery_description} onChange={(e) => setForm({ ...form, delivery_description: e.target.value })} className="bg-input/40" /></div>
+                </div>
+              )}
+
               <div>
                 <Label className="text-xs">Provider label (e.g. Playstore)</Label>
                 <Input value={form.provider_label ?? ""} onChange={(e) => setForm({ ...form, provider_label: e.target.value })} className="bg-input/40" />
@@ -167,13 +209,6 @@ function AdminProducts() {
                 <Select value={form.product_type} onValueChange={(v) => setForm({ ...form, product_type: v })}>
                   <SelectTrigger className="bg-input/40"><SelectValue /></SelectTrigger>
                   <SelectContent>{PRODUCT_TYPES.map((t) => <SelectItem key={t} value={t}>{t.replace("_", " ")}</SelectItem>)}</SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label className="text-xs">Category</Label>
-                <Select value={form.category_id || undefined} onValueChange={(v) => setForm({ ...form, category_id: v })}>
-                  <SelectTrigger className="bg-input/40"><SelectValue placeholder="None" /></SelectTrigger>
-                  <SelectContent>{categories?.map((c: any) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               {!isCard && (
