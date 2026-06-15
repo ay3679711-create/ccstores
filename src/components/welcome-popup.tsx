@@ -55,7 +55,7 @@ export function WelcomePopup() {
           <CodeRow label="Friends chat code" value={friendsCode} hint="Paste in Community → Friends chat to enter the discussion lounge." onCopy={() => copy(friendsCode, "Friends chat code")} accent="pink" />
         </div>
 
-        <Button onClick={() => setOpen(false)} className="w-full mt-4 bg-primary text-primary-foreground">Enter marketplace</Button>
+        <Button onClick={() => setOpen(false)} className="w-full mt-4 glass border-neon-cyan/40 bg-white/5 hover:bg-white/10 text-foreground backdrop-blur-xl">Enter marketplace</Button>
       </DialogContent>
     </Dialog>
   );
