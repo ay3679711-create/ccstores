@@ -12,7 +12,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "CC Whale Marketplace — Premium Digital Goods" },
+      { title: "nidia's no.1 garanted cc store" },
       { name: "description", content: "Cyberpunk marketplace for legal digital products, software licenses, subscriptions, gift cards, and gaming assets. Secure transactions, instant digital delivery." },
       { property: "og:title", content: "CC Whale Marketplace" },
       { property: "og:description", content: "Premium cyber marketplace for legal digital goods. Verified. Instant. Secure." },
@@ -116,12 +116,12 @@ function Landing() {
             <h1 className="font-display font-black text-5xl sm:text-7xl lg:text-8xl leading-[0.95] tracking-tight max-w-4xl">
               The digital
               <br />
-              <span className="bg-gradient-to-r from-neon-cyan via-neon-blue to-neon-violet bg-clip-text text-transparent">
-                frontier marketplace
+              <span className="bg-gradient-to-r from-neon-cyan via-neon-blue to-neon-violet bg-clip-text text-transparent uppercase tracking-[0.1em]">
+                CC Store
               </span>
             </h1>
             <p className="mt-6 max-w-xl text-base sm:text-lg text-muted-foreground">
-              Secure exchange for verified software licenses, premium subscriptions, gift cards, and digital assets. Instant delivery, encrypted transactions.
+              nidia's no.1 garanted cc store and unlimited features with secqure tranjection and more feature as compare to other website
             </p>
 
             <div className="mt-10 flex flex-wrap gap-3">
@@ -144,12 +144,12 @@ function Landing() {
           {/* Stats strip - live metrics */}
           <div className="mt-16 grid grid-cols-2 lg:grid-cols-6 gap-4">
             {[
-              { label: "Live now", value: stats?.live ?? 0, color: "neon-cyan", pulse: true },
-              { label: "Visits / 24h", value: stats?.visits24 ?? 0, color: "neon-blue" },
-              { label: "Joined today", value: stats?.joinedToday ?? 0, color: "neon-pink" },
-              { label: "Total users", value: stats?.users ?? 0, color: "neon-cyan" },
-              { label: "Active listings", value: stats?.products ?? 0, color: "neon-violet" },
-              { label: "Orders done", value: stats?.orders ?? 0, color: "neon-pink" },
+              { label: "Live now", value: "9.6k", color: "neon-cyan", pulse: true },
+              { label: "Visits / 24h", value: "42k", color: "neon-blue" },
+              { label: "Joined today", value: "70", color: "neon-pink" },
+              { label: "Total users", value: "180k", color: "neon-cyan" },
+              { label: "Active listings", value: "34k", color: "neon-violet" },
+              { label: "Orders done", value: "47925673", color: "neon-pink" },
             ].map((s: any, i: number) => (
               <motion.div
                 key={s.label}
@@ -163,7 +163,7 @@ function Landing() {
                   <p className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">{s.label}</p>
                 </div>
                 <p className={`mt-1 font-display text-2xl font-bold text-${s.color}`} style={{ textShadow: `0 0 16px var(--${s.color})` }}>
-                  <CountUp to={s.value} />
+                  {typeof s.value === "string" ? s.value : <CountUp to={s.value} />}
                 </p>
               </motion.div>
             ))}
@@ -313,10 +313,10 @@ function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col md:flex-row justify-between gap-6">
           <div className="flex items-center gap-2">
             <div className="size-6 rounded-md bg-gradient-to-br from-neon-cyan to-neon-violet" />
-            <span className="font-display font-black tracking-wider text-sm">CC <span className="neon-text-cyan">WHALE</span></span>
+            <span className="font-display font-black tracking-wider text-sm">CC <span className="neon-text-cyan">STORE</span></span>
           </div>
           <div className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
-            © 2026 CC Whale Marketplace • All rights reserved
+            © 2026 CC Store Marketplace • All rights reserved
           </div>
         </div>
       </footer>

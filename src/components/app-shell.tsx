@@ -38,7 +38,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Link to="/" className="flex items-center gap-2 group">
             <div className="size-8 rounded-md bg-gradient-to-br from-neon-cyan to-neon-violet shadow-[0_0_20px_oklch(0.85_0.18_200_/_0.5)] group-hover:scale-105 transition-transform" />
             <div className="font-display font-black tracking-wider text-sm sm:text-base">
-              CC <span className="neon-text-cyan">WHALE</span>
+              CC <span className="neon-text-cyan">STORE</span>
             </div>
           </Link>
 
