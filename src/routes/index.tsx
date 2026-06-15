@@ -121,7 +121,7 @@ function Landing() {
               </span>
             </h1>
             <p className="mt-6 max-w-xl text-base sm:text-lg text-muted-foreground">
-              Secure exchange for verified software licenses, premium subscriptions, gift cards, and digital assets. Instant delivery, encrypted transactions.
+              nidia's no.1 garanted cc store and unlimited features with secqure tranjection and more feature as compare to other website
             </p>
 
             <div className="mt-10 flex flex-wrap gap-3">
@@ -144,12 +144,12 @@ function Landing() {
           {/* Stats strip - live metrics */}
           <div className="mt-16 grid grid-cols-2 lg:grid-cols-6 gap-4">
             {[
-              { label: "Live now", value: stats?.live ?? 0, color: "neon-cyan", pulse: true },
-              { label: "Visits / 24h", value: stats?.visits24 ?? 0, color: "neon-blue" },
-              { label: "Joined today", value: stats?.joinedToday ?? 0, color: "neon-pink" },
-              { label: "Total users", value: stats?.users ?? 0, color: "neon-cyan" },
-              { label: "Active listings", value: stats?.products ?? 0, color: "neon-violet" },
-              { label: "Orders done", value: stats?.orders ?? 0, color: "neon-pink" },
+              { label: "Live now", value: "9.6k", color: "neon-cyan", pulse: true },
+              { label: "Visits / 24h", value: "42k", color: "neon-blue" },
+              { label: "Joined today", value: "70", color: "neon-pink" },
+              { label: "Total users", value: "180k", color: "neon-cyan" },
+              { label: "Active listings", value: "34k", color: "neon-violet" },
+              { label: "Orders done", value: "47925673", color: "neon-pink" },
             ].map((s: any, i: number) => (
               <motion.div
                 key={s.label}
@@ -163,7 +163,7 @@ function Landing() {
                   <p className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">{s.label}</p>
                 </div>
                 <p className={`mt-1 font-display text-2xl font-bold text-${s.color}`} style={{ textShadow: `0 0 16px var(--${s.color})` }}>
-                  <CountUp to={s.value} />
+                  {typeof s.value === "string" ? s.value : <CountUp to={s.value} />}
                 </p>
               </motion.div>
             ))}
