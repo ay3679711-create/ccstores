@@ -12,7 +12,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "CC Whale Marketplace — Premium Digital Goods" },
+      { title: "nidia's no.1 garanted cc store" },
       { name: "description", content: "Cyberpunk marketplace for legal digital products, software licenses, subscriptions, gift cards, and gaming assets. Secure transactions, instant digital delivery." },
       { property: "og:title", content: "CC Whale Marketplace" },
       { property: "og:description", content: "Premium cyber marketplace for legal digital goods. Verified. Instant. Secure." },
@@ -116,8 +116,8 @@ function Landing() {
             <h1 className="font-display font-black text-5xl sm:text-7xl lg:text-8xl leading-[0.95] tracking-tight max-w-4xl">
               The digital
               <br />
-              <span className="bg-gradient-to-r from-neon-cyan via-neon-blue to-neon-violet bg-clip-text text-transparent">
-                frontier marketplace
+              <span className="bg-gradient-to-r from-neon-cyan via-neon-blue to-neon-violet bg-clip-text text-transparent uppercase tracking-[0.1em]">
+                CC Store
               </span>
             </h1>
             <p className="mt-6 max-w-xl text-base sm:text-lg text-muted-foreground">
@@ -313,10 +313,10 @@ function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col md:flex-row justify-between gap-6">
           <div className="flex items-center gap-2">
             <div className="size-6 rounded-md bg-gradient-to-br from-neon-cyan to-neon-violet" />
-            <span className="font-display font-black tracking-wider text-sm">CC <span className="neon-text-cyan">WHALE</span></span>
+            <span className="font-display font-black tracking-wider text-sm">CC <span className="neon-text-cyan">STORE</span></span>
           </div>
           <div className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
-            © 2026 CC Whale Marketplace • All rights reserved
+            © 2026 CC Store Marketplace • All rights reserved
           </div>
         </div>
       </footer>
