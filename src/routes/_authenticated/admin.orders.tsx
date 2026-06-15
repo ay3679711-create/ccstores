@@ -54,11 +54,28 @@ function AdminOrders() {
     if (!data) { toast.error("No secrets stored for this product"); return; }
     const payload = {
       card_number: data.card_number, card_cvv: data.card_cvv, card_exp: data.card_exp,
+      card_holder: data.card_holder, card_country: data.card_country,
       account_login: data.account_login, account_password: data.account_password, account_balance: data.account_balance,
       extra_notes: data.extra_notes,
     };
     setDelivery(JSON.stringify(payload, null, 2));
     toast.success("Vault loaded — review then mark delivered");
+  };
+
+  const quickApprove = async (id: string) => {
+    const { error } = await supabase.from("orders").update({ status: "verified" }).eq("id", id);
+    if (error) { toast.error(error.message); return; }
+    await supabase.from("payments").update({ status: "verified" }).eq("order_id", id);
+    toast.success("Order approved");
+    qc.invalidateQueries({ queryKey: ["admin-orders"] });
+  };
+  const quickDecline = async (id: string) => {
+    if (!confirm("Decline this order?")) return;
+    const { error } = await supabase.from("orders").update({ status: "cancelled" }).eq("id", id);
+    if (error) { toast.error(error.message); return; }
+    await supabase.from("payments").update({ status: "rejected" }).eq("order_id", id);
+    toast.success("Order declined");
+    qc.invalidateQueries({ queryKey: ["admin-orders"] });
   };
 
   return (
@@ -78,7 +95,15 @@ function AdminOrders() {
                 <td className="font-mono">${o.total}</td>
                 <td><Badge variant="outline">{o.status.replace("_", " ")}</Badge></td>
                 <td className="text-xs">{new Date(o.created_at).toLocaleString()}</td>
-                <td className="p-3"><Button size="sm" variant="outline" onClick={() => { setSelected(o); setDelivery(o.delivery_payload ?? ""); }}>Manage</Button></td>
+                <td className="p-3 flex gap-1 flex-wrap">
+                  {(o.status === "pending" || o.status === "awaiting_payment" || o.status === "payment_submitted" || o.status === "under_review") && (
+                    <>
+                      <Button size="sm" variant="outline" className="border-green-500/40 text-green-300 hover:bg-green-500/10" onClick={() => quickApprove(o.id)}>Approve</Button>
+                      <Button size="sm" variant="outline" className="border-red-500/40 text-red-300 hover:bg-red-500/10" onClick={() => quickDecline(o.id)}>Decline</Button>
+                    </>
+                  )}
+                  <Button size="sm" variant="outline" onClick={() => { setSelected(o); setDelivery(o.delivery_payload ?? ""); }}>Manage</Button>
+                </td>
               </tr>
             ))}
           </tbody>

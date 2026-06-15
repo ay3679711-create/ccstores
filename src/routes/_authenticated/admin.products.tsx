@@ -40,7 +40,7 @@ function AdminProducts() {
   // Secrets dialog
   const [secretsFor, setSecretsFor] = useState<any>(null);
   const [secrets, setSecrets] = useState<any>({
-    card_number: "", card_cvv: "", card_exp: "",
+    card_number: "", card_cvv: "", card_exp: "", card_holder: "", card_country: "",
     account_login: "", account_password: "", account_balance: "",
     extra_notes: "",
   });
@@ -92,7 +92,7 @@ function AdminProducts() {
   const openSecrets = async (p: any) => {
     setSecretsFor(p);
     const { data } = await supabase.from("product_secrets").select("*").eq("product_id", p.id).maybeSingle();
-    setSecrets(data ?? { card_number: "", card_cvv: "", card_exp: "", account_login: "", account_password: "", account_balance: "", extra_notes: "" });
+    setSecrets(data ?? { card_number: "", card_cvv: "", card_exp: "", card_holder: "", card_country: "", account_login: "", account_password: "", account_balance: "", extra_notes: "" });
   };
 
   const saveSecrets = async () => {
@@ -102,6 +102,8 @@ function AdminProducts() {
       card_number: secrets.card_number || null,
       card_cvv: secrets.card_cvv || null,
       card_exp: secrets.card_exp || null,
+      card_holder: secrets.card_holder || null,
+      card_country: secrets.card_country || null,
       account_login: secrets.account_login || null,
       account_password: secrets.account_password || null,
       account_balance: secrets.account_balance ? parseFloat(secrets.account_balance) : null,
@@ -227,6 +229,8 @@ function AdminProducts() {
             <div><Label className="text-xs">Card number</Label><Input value={secrets.card_number ?? ""} onChange={(e) => setSecrets({ ...secrets, card_number: e.target.value })} className="bg-input/40 font-mono" /></div>
             <div><Label className="text-xs">CVV</Label><Input value={secrets.card_cvv ?? ""} onChange={(e) => setSecrets({ ...secrets, card_cvv: e.target.value })} className="bg-input/40 font-mono" /></div>
             <div><Label className="text-xs">Expiry (MM/YY)</Label><Input value={secrets.card_exp ?? ""} onChange={(e) => setSecrets({ ...secrets, card_exp: e.target.value })} className="bg-input/40 font-mono" /></div>
+            <div><Label className="text-xs">Cardholder name</Label><Input value={secrets.card_holder ?? ""} onChange={(e) => setSecrets({ ...secrets, card_holder: e.target.value })} className="bg-input/40" /></div>
+            <div><Label className="text-xs">Country</Label><Input value={secrets.card_country ?? ""} onChange={(e) => setSecrets({ ...secrets, card_country: e.target.value })} className="bg-input/40" placeholder="e.g. India" /></div>
             <div className="sm:col-span-2 text-[10px] font-mono uppercase tracking-widest text-neon-violet mt-2">ACCOUNT FIELDS</div>
             <div><Label className="text-xs">Login / email</Label><Input value={secrets.account_login ?? ""} onChange={(e) => setSecrets({ ...secrets, account_login: e.target.value })} className="bg-input/40" /></div>
             <div><Label className="text-xs">Password</Label><Input value={secrets.account_password ?? ""} onChange={(e) => setSecrets({ ...secrets, account_password: e.target.value })} className="bg-input/40 font-mono" /></div>

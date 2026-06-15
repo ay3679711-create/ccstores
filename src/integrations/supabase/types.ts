@@ -474,8 +474,10 @@ export type Database = {
           account_balance: number | null
           account_login: string | null
           account_password: string | null
+          card_country: string | null
           card_cvv: string | null
           card_exp: string | null
+          card_holder: string | null
           card_number: string | null
           extra_notes: string | null
           product_id: string
@@ -485,8 +487,10 @@ export type Database = {
           account_balance?: number | null
           account_login?: string | null
           account_password?: string | null
+          card_country?: string | null
           card_cvv?: string | null
           card_exp?: string | null
+          card_holder?: string | null
           card_number?: string | null
           extra_notes?: string | null
           product_id: string
@@ -496,8 +500,10 @@ export type Database = {
           account_balance?: number | null
           account_login?: string | null
           account_password?: string | null
+          card_country?: string | null
           card_cvv?: string | null
           card_exp?: string | null
+          card_holder?: string | null
           card_number?: string | null
           extra_notes?: string | null
           product_id?: string
