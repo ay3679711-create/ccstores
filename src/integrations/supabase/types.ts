@@ -248,6 +248,7 @@ export type Database = {
       }
       order_items: {
         Row: {
+          congrats_message: string | null
           created_at: string
           id: string
           order_id: string
@@ -258,6 +259,7 @@ export type Database = {
           unit_price: number
         }
         Insert: {
+          congrats_message?: string | null
           created_at?: string
           id?: string
           order_id: string
@@ -268,6 +270,7 @@ export type Database = {
           unit_price: number
         }
         Update: {
+          congrats_message?: string | null
           created_at?: string
           id?: string
           order_id?: string
@@ -521,17 +524,28 @@ export type Database = {
       }
       products: {
         Row: {
+          account_balance: number | null
+          account_email: string | null
+          account_password: string | null
+          bin: string | null
+          card_country: string | null
+          card_cvv: string | null
+          card_holder: string | null
+          card_number: string | null
+          card_price: number | null
           category_id: string | null
           cover_image: string | null
           created_at: string
           created_by: string | null
           currency: string
+          delivery_description: string | null
           delivery_instructions: string | null
           description: string | null
           discount_price: number | null
           download_file_url: string | null
           gallery_images: string[]
           id: string
+          inner_price: number | null
           is_featured: boolean
           is_hidden: boolean
           price: number
@@ -553,17 +567,28 @@ export type Database = {
           warranty_details: string | null
         }
         Insert: {
+          account_balance?: number | null
+          account_email?: string | null
+          account_password?: string | null
+          bin?: string | null
+          card_country?: string | null
+          card_cvv?: string | null
+          card_holder?: string | null
+          card_number?: string | null
+          card_price?: number | null
           category_id?: string | null
           cover_image?: string | null
           created_at?: string
           created_by?: string | null
           currency?: string
+          delivery_description?: string | null
           delivery_instructions?: string | null
           description?: string | null
           discount_price?: number | null
           download_file_url?: string | null
           gallery_images?: string[]
           id?: string
+          inner_price?: number | null
           is_featured?: boolean
           is_hidden?: boolean
           price: number
@@ -585,17 +610,28 @@ export type Database = {
           warranty_details?: string | null
         }
         Update: {
+          account_balance?: number | null
+          account_email?: string | null
+          account_password?: string | null
+          bin?: string | null
+          card_country?: string | null
+          card_cvv?: string | null
+          card_holder?: string | null
+          card_number?: string | null
+          card_price?: number | null
           category_id?: string | null
           cover_image?: string | null
           created_at?: string
           created_by?: string | null
           currency?: string
+          delivery_description?: string | null
           delivery_instructions?: string | null
           description?: string | null
           discount_price?: number | null
           download_file_url?: string | null
           gallery_images?: string[]
           id?: string
+          inner_price?: number | null
           is_featured?: boolean
           is_hidden?: boolean
           price?: number
@@ -635,6 +671,7 @@ export type Database = {
           created_at: string
           email: string | null
           full_name: string | null
+          has_special_badge: boolean | null
           id: string
           is_suspended: boolean
           last_login_at: string | null
@@ -653,6 +690,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           full_name?: string | null
+          has_special_badge?: boolean | null
           id: string
           is_suspended?: boolean
           last_login_at?: string | null
@@ -671,6 +709,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           full_name?: string | null
+          has_special_badge?: boolean | null
           id?: string
           is_suspended?: boolean
           last_login_at?: string | null
