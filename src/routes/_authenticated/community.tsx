@@ -2,65 +2,22 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
-import { Send, Lock, Megaphone, Plus, MessageSquare, Users as UsersIcon, ShieldAlert } from "lucide-react";
+import { Send, Megaphone, Plus, MessageSquare, Users as UsersIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth, useProfile, useIsAdmin } from "@/hooks/use-auth";
+import { useAuth, useIsAdmin } from "@/hooks/use-auth";
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { GlassCard, NeonHeading } from "@/components/cyber-ui";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { deriveAdminChatCode, isValidAdminChatCode } from "@/lib/user-codes";
 
 export const Route = createFileRoute("/_authenticated/community")({
   component: CommunityPage,
 });
 
 function CommunityPage() {
-  const { user } = useAuth();
-  const { data: profile } = useProfile();
   const { data: isAdmin } = useIsAdmin();
-
-  const [adminUnlocked, setAdminUnlocked] = useState(false);
-  const [friendsUnlocked, setFriendsUnlocked] = useState(false);
-  const [adminCodeInput, setAdminCodeInput] = useState("");
-  const [friendsCodeInput, setFriendsCodeInput] = useState("");
-  const [adminWarn, setAdminWarn] = useState("");
-  const [friendsWarn, setFriendsWarn] = useState("");
-
-  // Persist unlock per-tab to avoid re-entering on each navigation
-  useEffect(() => {
-    if (!user) return;
-    if (sessionStorage.getItem(`ccwhale_admin_unlock_${user.id}`) === "1") setAdminUnlocked(true);
-    if (sessionStorage.getItem(`ccwhale_friends_unlock_${user.id}`) === "1") setFriendsUnlocked(true);
-  }, [user]);
-
-  const verifyAdminCode = () => {
-    if (!user) return;
-    if (isValidAdminChatCode(adminCodeInput, user.id)) {
-      setAdminUnlocked(true);
-      setAdminWarn("");
-      sessionStorage.setItem(`ccwhale_admin_unlock_${user.id}`, "1");
-      toast.success("Access granted — admin channel open");
-    } else {
-      setAdminWarn("⚠ Wrong code. This channel only opens with your personal admin chat code (see Profile).");
-      toast.error("Invalid admin chat code");
-    }
-  };
-
-  const verifyFriendsCode = () => {
-    if (!user || !profile) return;
-    if (friendsCodeInput.trim().toUpperCase() === ((profile as any).community_code ?? "").toUpperCase()) {
-      setFriendsUnlocked(true);
-      setFriendsWarn("");
-      sessionStorage.setItem(`ccwhale_friends_unlock_${user.id}`, "1");
-      toast.success("Access granted — friends lounge open");
-    } else {
-      setFriendsWarn("⚠ Wrong code. Use the Friends chat code from your Profile.");
-      toast.error("Invalid friends code");
-    }
-  };
 
   return (
     <AppShell>
@@ -68,76 +25,22 @@ function CommunityPage() {
         <div className="mb-8">
           <p className="text-[10px] font-mono uppercase tracking-widest text-neon-cyan">// Community Hub</p>
           <NeonHeading className="text-3xl">Network channel</NeonHeading>
-          <p className="text-sm text-muted-foreground mt-1">Two private channels. Each one needs its own access code from your <a href="/profile" className="text-neon-cyan hover:underline">Profile</a>.</p>
+          <p className="text-sm text-muted-foreground mt-1">Talk to admin support or chat with other users.</p>
         </div>
 
         <Tabs defaultValue="admin">
           <TabsList className="bg-surface/40">
-            <TabsTrigger value="admin"><MessageSquare className="size-3.5 mr-1" /> Admin chat</TabsTrigger>
-            <TabsTrigger value="friends"><UsersIcon className="size-3.5 mr-1" /> Friends lounge</TabsTrigger>
+            <TabsTrigger value="admin"><MessageSquare className="size-3.5 mr-1" /> Talk to admin</TabsTrigger>
+            <TabsTrigger value="friends"><UsersIcon className="size-3.5 mr-1" /> Talk to users</TabsTrigger>
             <TabsTrigger value="announcements"><Megaphone className="size-3.5 mr-1" /> Announcements</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="admin">
-            {!adminUnlocked ? (
-              <GateCard
-                icon={<MessageSquare className="size-5 text-neon-violet" />}
-                title="Private admin channel"
-                hint="Paste your personal Admin chat code (format AC-XXXXXXXX). Find it in Profile."
-                value={adminCodeInput}
-                setValue={setAdminCodeInput}
-                warn={adminWarn}
-                onVerify={verifyAdminCode}
-                accent="violet"
-              />
-            ) : (
-              <AdminChat />
-            )}
-          </TabsContent>
-
-          <TabsContent value="friends">
-            {!friendsUnlocked ? (
-              <GateCard
-                icon={<UsersIcon className="size-5 text-neon-pink" />}
-                title="Friends lounge"
-                hint="Paste your personal Friends chat code (format FR-XXXXXXXX). Find it in Profile."
-                value={friendsCodeInput}
-                setValue={setFriendsCodeInput}
-                warn={friendsWarn}
-                onVerify={verifyFriendsCode}
-                accent="pink"
-              />
-            ) : (
-              <FriendsLounge />
-            )}
-          </TabsContent>
-
-          <TabsContent value="announcements">
-            <Announcements isAdmin={!!isAdmin} />
-          </TabsContent>
+          <TabsContent value="admin"><AdminChat /></TabsContent>
+          <TabsContent value="friends"><FriendsLounge /></TabsContent>
+          <TabsContent value="announcements"><Announcements isAdmin={!!isAdmin} /></TabsContent>
         </Tabs>
       </div>
     </AppShell>
-  );
-}
-
-function GateCard({ icon, title, hint, value, setValue, warn, onVerify, accent }: any) {
-  const ring = accent === "violet" ? "border-neon-violet/30" : "border-neon-pink/30";
-  const btn = accent === "violet" ? "bg-neon-violet/20 text-neon-violet hover:bg-neon-violet/30" : "bg-neon-pink/20 text-neon-pink hover:bg-neon-pink/30";
-  return (
-    <GlassCard className={`p-8 mt-4 ${ring} border`}>
-      <div className="flex items-center gap-2 mb-2">{icon}<h3 className="font-semibold">{title}</h3></div>
-      <p className="text-sm text-muted-foreground mb-4">{hint}</p>
-      <div className="flex gap-2">
-        <Input value={value} onChange={(e) => setValue(e.target.value)} placeholder="ACCESS CODE" className="bg-input/40 font-mono uppercase" />
-        <Button onClick={onVerify} className={btn}><Lock className="size-4 mr-1" /> Unlock</Button>
-      </div>
-      {warn && (
-        <div className="mt-3 flex items-start gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-xs">
-          <ShieldAlert className="size-4 mt-0.5 shrink-0" /><span>{warn}</span>
-        </div>
-      )}
-    </GlassCard>
   );
 }
 

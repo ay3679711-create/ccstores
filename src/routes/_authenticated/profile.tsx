@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Upload, Copy, MessageSquare, Users, Lock } from "lucide-react";
+import { Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth, useProfile } from "@/hooks/use-auth";
 import { useQueryClient } from "@tanstack/react-query";
@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { GlassCard, NeonHeading } from "@/components/cyber-ui";
 import { Badge } from "@/components/ui/badge";
-import { deriveAdminChatCode } from "@/lib/user-codes";
+
 
 export const Route = createFileRoute("/_authenticated/profile")({
   component: ProfilePage,
@@ -59,8 +59,6 @@ function ProfilePage() {
     }
   };
 
-  const adminCode = deriveAdminChatCode(user!.id);
-  const friendsCode = (profile as any).community_code ?? "";
   const copy = (v: string, label: string) => navigator.clipboard.writeText(v).then(() => toast.success(`${label} copied`));
 
   return (
@@ -68,28 +66,6 @@ function ProfilePage() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <NeonHeading className="text-3xl mb-8">Profile</NeonHeading>
 
-        <GlassCard className="p-6 mb-6" glow>
-          <h3 className="font-semibold mb-1 flex items-center gap-2"><Lock className="size-4 text-neon-cyan" /> Your private access codes</h3>
-          <p className="text-xs text-muted-foreground mb-4">Keep these safe. They unlock the chat channels in Community. Admin can never see them.</p>
-          <div className="grid sm:grid-cols-2 gap-3">
-            <div className="glass rounded-xl p-4 border border-neon-violet/30">
-              <div className="flex items-center justify-between">
-                <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground flex items-center gap-1"><MessageSquare className="size-3" /> Admin chat code</p>
-                <Button size="icon" variant="ghost" onClick={() => copy(adminCode, "Admin code")}><Copy className="size-3.5" /></Button>
-              </div>
-              <p className="font-mono font-bold text-xl text-neon-violet mt-1">{adminCode}</p>
-              <p className="text-[10px] text-muted-foreground mt-1">Paste in Community → Admin chat. Wrong codes are warned.</p>
-            </div>
-            <div className="glass rounded-xl p-4 border border-neon-pink/30">
-              <div className="flex items-center justify-between">
-                <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground flex items-center gap-1"><Users className="size-3" /> Friends chat code</p>
-                <Button size="icon" variant="ghost" onClick={() => copy(friendsCode, "Friends code")}><Copy className="size-3.5" /></Button>
-              </div>
-              <p className="font-mono font-bold text-xl text-neon-pink mt-1">{friendsCode}</p>
-              <p className="text-[10px] text-muted-foreground mt-1">Paste in Community → Friends to unlock the discussion lounge.</p>
-            </div>
-          </div>
-        </GlassCard>
 
         <GlassCard className="p-6 mb-6">
           <div className="flex items-center gap-4 mb-6">
