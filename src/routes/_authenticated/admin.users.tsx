@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { toast } from "sonner";
-import { Search, Shield, ShieldOff, Ban, ShieldCheck, Sparkles } from "lucide-react";
+import { Search, Shield, Ban, ShieldCheck, Sparkles, ChevronDown, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,7 @@ function AdminUsers() {
   const [banReason, setBanReason] = useState("");
   const [banDuration, setBanDuration] = useState<string>("permanent");
   const [banning, setBanning] = useState(false);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const { data: users } = useQuery({
     queryKey: ["admin-users", q],
@@ -92,7 +93,8 @@ function AdminUsers() {
         <table className="w-full text-sm">
           <thead className="bg-surface/40 text-xs font-mono uppercase">
             <tr>
-              <th className="p-3 text-left">Code</th>
+              <th className="p-3 w-8"></th>
+              <th className="text-left">Code</th>
               <th className="text-left">User</th>
               <th className="text-left">Email</th>
               <th className="text-left">Joined</th>
@@ -105,8 +107,14 @@ function AdminUsers() {
               const isAdmin = u.user_roles?.some((r: any) => r.role === "admin");
               const banActive = u.is_suspended && (!u.suspended_until || new Date(u.suspended_until) > new Date());
               return (
-                <tr key={u.id} className="border-t border-border/40 hover:bg-white/5 align-top">
-                  <td className="p-3 font-mono text-neon-cyan text-xs">{u.cc_code}</td>
+                <Fragment key={u.id}>
+                <tr className="border-t border-border/40 hover:bg-white/5 align-top">
+                  <td className="p-3">
+                    <button onClick={() => setExpanded((p) => ({ ...p, [u.id]: !p[u.id] }))} className="text-muted-foreground hover:text-neon-cyan">
+                      {expanded[u.id] ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />}
+                    </button>
+                  </td>
+                  <td className="font-mono text-neon-cyan text-xs">{u.cc_code}</td>
                   <td className="py-3">{u.full_name ?? "—"}</td>
                   <td className="text-muted-foreground text-xs py-3">{u.email}</td>
                   <td className="text-xs py-3">{new Date(u.created_at).toLocaleDateString()}</td>
@@ -152,6 +160,30 @@ function AdminUsers() {
                     </Button>
                   </td>
                 </tr>
+                {expanded[u.id] && (
+                  <tr className="bg-white/[0.02] border-t border-border/20">
+                    <td colSpan={7} className="p-4">
+                      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+                        <div><span className="text-muted-foreground">User ID:</span> <span className="font-mono">{u.id}</span></div>
+                        <div><span className="text-muted-foreground">CC Code:</span> <span className="font-mono text-neon-cyan">{u.cc_code}</span></div>
+                        <div><span className="text-muted-foreground">Community Code:</span> <span className="font-mono text-neon-violet">{u.community_code ?? "—"}</span></div>
+                        <div><span className="text-muted-foreground">Full Name:</span> {u.full_name ?? "—"}</div>
+                        <div><span className="text-muted-foreground">Email:</span> {u.email ?? "—"}</div>
+                        <div><span className="text-muted-foreground">Phone:</span> {u.phone ?? "—"}</div>
+                        <div><span className="text-muted-foreground">Joined:</span> {new Date(u.created_at).toLocaleString()}</div>
+                        <div><span className="text-muted-foreground">Updated:</span> {u.updated_at ? new Date(u.updated_at).toLocaleString() : "—"}</div>
+                        <div><span className="text-muted-foreground">Suspended:</span> {u.is_suspended ? "Yes" : "No"}</div>
+                        {u.suspended_at && <div><span className="text-muted-foreground">Suspended at:</span> {new Date(u.suspended_at).toLocaleString()}</div>}
+                        {u.suspended_until && <div><span className="text-muted-foreground">Until:</span> {new Date(u.suspended_until).toLocaleString()}</div>}
+                        {u.suspend_reason && <div className="sm:col-span-2 md:col-span-3"><span className="text-muted-foreground">Reason:</span> {u.suspend_reason}</div>}
+                        <div><span className="text-muted-foreground">Special badge:</span> {u.has_special_badge ? "Yes ★" : "No"}</div>
+                        <div><span className="text-muted-foreground">Role:</span> {isAdmin ? "Admin" : "User"}</div>
+                        {u.avatar_url && <div className="sm:col-span-2 md:col-span-3"><span className="text-muted-foreground">Avatar:</span> <a href={u.avatar_url} target="_blank" rel="noreferrer" className="text-neon-cyan underline break-all">{u.avatar_url}</a></div>}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                </Fragment>
               );
             })}
           </tbody>
