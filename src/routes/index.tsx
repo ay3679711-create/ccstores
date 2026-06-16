@@ -316,7 +316,7 @@ function Landing() {
             <span className="font-display font-black tracking-wider text-sm">CC <span className="neon-text-cyan">STORE</span></span>
           </div>
           <div className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
-            © 2026 CC Store Marketplace • All rights reserved
+            © 2026 CC MARKET @COPYRIGHT CCSTORE OFFICIAL INDIA
           </div>
         </div>
       </footer>
