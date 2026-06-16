@@ -271,9 +271,9 @@ function Landing() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {[
             { icon: Shield, title: "Secure Transactions", desc: "End-to-end encrypted exchange with manual verification.", color: "neon-cyan" },
-            { icon: Zap, title: "Instant Delivery", desc: "Digital goods dispatched the moment payment clears review.", color: "neon-blue" },
+            { icon: Zap, title: "Instant Delivery", desc: "Digital cards,account dispatched the moment payment clears review.", color: "neon-blue" },
             { icon: BadgeCheck, title: "Verified Marketplace", desc: "Every listing curated and validated before going live.", color: "neon-violet" },
-            { icon: MessagesSquare, title: "24/7 Community", desc: "Private admin support and an active discussion hub.", color: "neon-pink" },
+            { icon: MessagesSquare, title: "24/7 Community", desc: "Private support and an active discussion hub.", color: "neon-pink" },
           ].map((f) => (
             <GlassCard key={f.title} className="p-6">
               <div className={`size-10 rounded-lg grid place-items-center mb-4 bg-${f.color}/10 text-${f.color}`}>
