@@ -110,7 +110,7 @@ function Landing() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass border border-neon-cyan/30 mb-6">
               <span className="size-1.5 rounded-full bg-neon-cyan animate-pulse" />
-              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-neon-cyan">System Online • v4.0.2</span>
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-neon-cyan">BIGGEST CC MARKET 0.2V</span>
             </div>
 
             <h1 className="font-display font-black text-5xl sm:text-7xl lg:text-8xl leading-[0.95] tracking-tight max-w-4xl">
