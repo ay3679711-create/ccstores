@@ -9,7 +9,7 @@ import { WelcomePopup } from "@/components/welcome-popup";
 import type { ReactNode } from "react";
 
 const navItems = [
-  { to: "/marketplace", label: "Market", icon: ShoppingBag },
+  { to: "/marketplace", label: "\n", icon: ShoppingBag },
   { to: "/orders", label: "Orders", icon: Package, auth: true },
   { to: "/community", label: "Community", icon: Users, auth: true },
   { to: "/profile", label: "Profile", icon: UserIcon, auth: true },
