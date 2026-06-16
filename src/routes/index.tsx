@@ -175,11 +175,11 @@ function Landing() {
       <div className="border-y border-border/40 bg-surface/40 py-3 overflow-hidden">
         <div className="flex gap-12 animate-marquee whitespace-nowrap text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
           {[...Array(2)].flatMap((_, i) => [
-            <span key={`a${i}`} className="flex items-center gap-2"><Activity className="size-3 text-neon-cyan" /> Order processed: Windows 11 Pro License</span>,
-            <span key={`b${i}`} className="flex items-center gap-2"><span className="size-1.5 rounded-full bg-neon-violet animate-pulse" /> New listing: Adobe Creative Cloud Annual</span>,
-            <span key={`c${i}`} className="flex items-center gap-2"><Activity className="size-3 text-neon-cyan" /> Gift card delivered: Amazon $100</span>,
-            <span key={`d${i}`} className="flex items-center gap-2"><span className="size-1.5 rounded-full bg-neon-pink animate-pulse" /> Network latency: 14ms</span>,
-            <span key={`e${i}`} className="flex items-center gap-2"><Activity className="size-3 text-neon-cyan" /> Subscription activated: Netflix Premium</span>,
+            <span key={`a${i}`} className="flex items-center gap-2"><Activity className="size-3 text-neon-cyan" /> AMAZON LODED ACCOUNT</span>,
+            <span key={`b${i}`} className="flex items-center gap-2"><span className="size-1.5 rounded-full bg-neon-violet animate-pulse" /> NEW VIP PROXY</span>,
+            <span key={`c${i}`} className="flex items-center gap-2"><Activity className="size-3 text-neon-cyan" /> {"\n"}</span>,
+            <span key={`d${i}`} className="flex items-center gap-2"><span className="size-1.5 rounded-full bg-neon-pink animate-pulse" /> NEW ALL FUNCTION</span>,
+            <span key={`e${i}`} className="flex items-center gap-2"><Activity className="size-3 text-neon-cyan" /> SUBSCRIPTION PREMIUM</span>,
           ])}
         </div>
       </div>
@@ -271,9 +271,9 @@ function Landing() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {[
             { icon: Shield, title: "Secure Transactions", desc: "End-to-end encrypted exchange with manual verification.", color: "neon-cyan" },
-            { icon: Zap, title: "Instant Delivery", desc: "Digital goods dispatched the moment payment clears review.", color: "neon-blue" },
+            { icon: Zap, title: "Instant Delivery", desc: "Digital cards,account dispatched the moment payment clears review.", color: "neon-blue" },
             { icon: BadgeCheck, title: "Verified Marketplace", desc: "Every listing curated and validated before going live.", color: "neon-violet" },
-            { icon: MessagesSquare, title: "24/7 Community", desc: "Private admin support and an active discussion hub.", color: "neon-pink" },
+            { icon: MessagesSquare, title: "24/7 Community", desc: "Private support and an active discussion hub.", color: "neon-pink" },
           ].map((f) => (
             <GlassCard key={f.title} className="p-6">
               <div className={`size-10 rounded-lg grid place-items-center mb-4 bg-${f.color}/10 text-${f.color}`}>
