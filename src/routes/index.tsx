@@ -177,7 +177,7 @@ function Landing() {
           {[...Array(2)].flatMap((_, i) => [
             <span key={`a${i}`} className="flex items-center gap-2"><Activity className="size-3 text-neon-cyan" /> </span>,
             <span key={`b${i}`} className="flex items-center gap-2"><span className="size-1.5 rounded-full bg-neon-violet animate-pulse" /> NEW VIP PROXY</span>,
-            <span key={`c${i}`} className="flex items-center gap-2"><Activity className="size-3 text-neon-cyan" /> Gift card delivered: Amazon $100</span>,
+            <span key={`c${i}`} className="flex items-center gap-2"><Activity className="size-3 text-neon-cyan" /> </span>,
             <span key={`d${i}`} className="flex items-center gap-2"><span className="size-1.5 rounded-full bg-neon-pink animate-pulse" /> AMAZON LODED ACCOUNT</span>,
             <span key={`e${i}`} className="flex items-center gap-2"><Activity className="size-3 text-neon-cyan" /> SUBSCRIPTION PREMIUM</span>,
           ])}
