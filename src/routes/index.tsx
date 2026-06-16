@@ -175,11 +175,11 @@ function Landing() {
       <div className="border-y border-border/40 bg-surface/40 py-3 overflow-hidden">
         <div className="flex gap-12 animate-marquee whitespace-nowrap text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
           {[...Array(2)].flatMap((_, i) => [
-            <span key={`a${i}`} className="flex items-center gap-2"><Activity className="size-3 text-neon-cyan" /> Order processed: Windows 11 Pro License</span>,
-            <span key={`b${i}`} className="flex items-center gap-2"><span className="size-1.5 rounded-full bg-neon-violet animate-pulse" /> New listing: Adobe Creative Cloud Annual</span>,
+            <span key={`a${i}`} className="flex items-center gap-2"><Activity className="size-3 text-neon-cyan" /> </span>,
+            <span key={`b${i}`} className="flex items-center gap-2"><span className="size-1.5 rounded-full bg-neon-violet animate-pulse" /> NEW VIP PROXY</span>,
             <span key={`c${i}`} className="flex items-center gap-2"><Activity className="size-3 text-neon-cyan" /> Gift card delivered: Amazon $100</span>,
-            <span key={`d${i}`} className="flex items-center gap-2"><span className="size-1.5 rounded-full bg-neon-pink animate-pulse" /> Network latency: 14ms</span>,
-            <span key={`e${i}`} className="flex items-center gap-2"><Activity className="size-3 text-neon-cyan" /> Subscription activated: Netflix Premium</span>,
+            <span key={`d${i}`} className="flex items-center gap-2"><span className="size-1.5 rounded-full bg-neon-pink animate-pulse" /> NEW ALL FUNCTION</span>,
+            <span key={`e${i}`} className="flex items-center gap-2"><Activity className="size-3 text-neon-cyan" /> SUBSCRIPTION PREMIUM</span>,
           ])}
         </div>
       </div>
