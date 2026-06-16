@@ -107,8 +107,8 @@ function AdminUsers() {
               const isAdmin = u.user_roles?.some((r: any) => r.role === "admin");
               const banActive = u.is_suspended && (!u.suspended_until || new Date(u.suspended_until) > new Date());
               return (
-                <>
-                <tr key={u.id} className="border-t border-border/40 hover:bg-white/5 align-top">
+                <Fragment key={u.id}>
+                <tr className="border-t border-border/40 hover:bg-white/5 align-top">
                   <td className="p-3">
                     <button onClick={() => setExpanded((p) => ({ ...p, [u.id]: !p[u.id] }))} className="text-muted-foreground hover:text-neon-cyan">
                       {expanded[u.id] ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />}
