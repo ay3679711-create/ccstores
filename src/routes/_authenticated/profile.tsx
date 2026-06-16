@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { GlassCard, NeonHeading } from "@/components/cyber-ui";
 import { Badge } from "@/components/ui/badge";
-import { deriveAdminChatCode } from "@/lib/user-codes";
+
 
 export const Route = createFileRoute("/_authenticated/profile")({
   component: ProfilePage,
