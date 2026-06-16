@@ -215,3 +215,7 @@
 .animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
 .animate-float-y { animation: float-y 5s ease-in-out infinite; }
 .animate-marquee { animation: marquee 40s linear infinite; }
+
+/* Invisible scrollbar — scrolling still works everywhere */
+* { scrollbar-width: none; -ms-overflow-style: none; }
+*::-webkit-scrollbar { width: 0 !important; height: 0 !important; display: none; }
